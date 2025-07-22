@@ -1,0 +1,87 @@
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100vh;
+  background-color: #eee;
+  color: #555;
+}
+
+header {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+}
+
+header > nav {
+  display: flex;
+}
+
+header > nav > a {
+  display: block;
+  padding: 1em;
+  color: #555;
+  text-decoration: none;
+  transition: background-color ease 200ms;
+}
+
+header > nav > a:hover {
+  background-color: #eee;
+}
+
+.page-content {
+  display: flex;
+  flex: 1;
+}
+
+.dashboard {
+  display: flex;
+  flex: 1;
+  padding: 1vw;
+}
+
+.chart-division {
+  display: flex;
+  flex: 1;
+}
+
+.chart {
+  flex: 1;
+  margin: 1vw;
+  padding: 1vw;
+  border-radius: .5em;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.chart-head {
+  font-size: 1em;
+  text-align: center;
+}
+
+table {
+  border-top: solid #555 2px;
+  border-bottom: solid #555 2px;
+}
+
+thead th {
+  border-bottom: solid #555 1px;
+}
+
+th, td {
+  padding: 0 1em;
+}
+
+.income-table {
+  width: 100%;
+}
+
+.income-table th {
+  text-align: left;
+}
+
+.income-table td {
+  text-align: right;
+}
+
