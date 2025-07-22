@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+}
+
+header {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+}
+
+header > nav {
+  display: flex;
+}
+
+header > nav > a {
+  display: block;
+  padding: 1em;
+  color: #555;
+  text-decoration: none;
+  transition: background-color ease 200ms;
+}
+
+header > nav > a:hover {
+  background-color: #eee;
+}
+
