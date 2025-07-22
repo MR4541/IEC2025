@@ -1,8 +1,15 @@
 const COLNUM = [0, 6, 6, 5];
 const NUM_FUNC = 3; 
-const BACKGROUND_COLOR = ["#ffffff", "#f1fff0", "#fff0f0", "#f0f0ff"]
-const BACKGROUND_INPUT_COLOR = ["#ffffff", "#f8fff8", "#fff8f8", "#f8f8ff"]
-const BACKGROUND_BUTTON_COLOR = ["#fcfcfc", "#b2c2b3", "#c2b2b2", "#b2b3c2"]
+const BACKGROUND_COLOR = ["#ffffff", "#f1fff0", "#fff0f0", "#f0f0ff"];
+const BACKGROUND_INPUT_COLOR = ["#ffffff", "#f8fff8", "#fff8f8", "#f8f8ff"];
+const BACKGROUND_BUTTON_COLOR = ["#fcfcfc", "#b2c2b3", "#c2b2b2", "#b2b3c2"];
+const TABLE_INPUT_TYPE = [[],
+    ["text", "text", "number", "number", "nil", "text"],
+    ["text", "text", "number", "number", "nil", "text"],
+    ["text", "text", "text", "number", "text"],
+];
+const TABLE_SUM_INDEX = [0, 4, 4, 3];
+let currentFuncIndex = 1;
 
 function formatFixedWidth(str, width, padChar = ' ') {
     if (str.length > width) {
@@ -18,10 +25,19 @@ function addRow(funcIndex=1){
 
     for(let i = 0; i < COLNUM[funcIndex]; i++){
         const td = document.createElement("td");
-        const input = document.createElement("input");
-        input.type = "text";
-        input.style.width = "94%";
-        td.appendChild(input);
+        if(i != TABLE_SUM_INDEX[funcIndex] || funcIndex == 3){
+            const input = document.createElement("input");
+            input.type = TABLE_INPUT_TYPE[funcIndex][i];
+            input.oninput = ()=>updateSubtotal(input);
+            input.style.width = "94%";
+            if(i == TABLE_SUM_INDEX[funcIndex] && funcIndex == 3){
+                input.classList.add("subtotal");
+            }
+            td.appendChild(input);
+        }else{
+            td.innerText = "0";
+            td.classList.add("subtotal");
+        }
         newRow.appendChild(td);
     }
 
@@ -37,6 +53,9 @@ function addRow(funcIndex=1){
     delTd.appendChild(delButton);
     newRow.append(delTd);
     tbody.appendChild(newRow);
+    document.querySelectorAll(`#div-of-func${funcIndex} input`).forEach((item) => {
+        item.style.backgroundColor = BACKGROUND_INPUT_COLOR[funcIndex];
+    });
 }
 
 function addTenRow(funcIndex=1){
@@ -56,12 +75,42 @@ function clearAllRow(funcIndex=1){
     addTenRow(funcIndex);
 }
 
+function updateSubtotal(inputElement) {
+    if(currentFuncIndex == 3){
+        updateTotal(inputElement.closest("table"));
+        return;
+    }
+    const row = inputElement.closest("tr");
+    const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
+    const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
+    const subtotal = price * qty;
+  
+    row.cells[4].textContent = subtotal.toFixed(0); // 小計欄
+    updateTotal(inputElement.closest("table"));
+}
+  
+function updateTotal(table) {
+    const subtotals = table.querySelectorAll(".subtotal");
+    // console.log(subtotals);  
+    let total = 0;
+    subtotals.forEach(td => {
+      total += parseInt(td.textContent) || parseInt(td.value) || 0;
+    });
+    document.querySelector(`#totalAmount${currentFuncIndex}`).innerHTML = String(total);
+}
+
 function submitTable(funcIndex=1){
-    const inputs = document.querySelectorAll(`#inputTable${funcIndex} tbody input`);
+    const inputs = document.querySelectorAll(`#inputTable${funcIndex} tbody td`);
     const data = [];
     inputs.forEach(input => {
-        data.push(input.value);
+        if(input.textContent=="刪除")
+            return;
+        if(input.textContent=="")
+            data.push(input.children[0].value);
+        else 
+            data.push(input.textContent);
     });
+    console.log(data);
 
     //output data
     let output = "表格內資料：\n";
@@ -95,6 +144,7 @@ function changeToFunc(funcIndex=1){
     document.querySelectorAll(`#div-of-func${funcIndex} input`).forEach((item) => {
         item.style.backgroundColor = BACKGROUND_INPUT_COLOR[funcIndex];
     });
+    currentFuncIndex = funcIndex;
 }
 
 window.onload = function(){

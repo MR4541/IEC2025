@@ -41,6 +41,9 @@ table, th, td{
     border: solid 1px;
     border-collapse: collapse;
 }
+td{
+    text-align: end;
+}
 table{
     width: 100%;
     table-layout: fixed;
