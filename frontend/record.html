@@ -8,25 +8,143 @@
     <script type="text/javascript" src="./script/record.js"></script>
 </head>
 <body>
-    <div class="table-container" id="tableContainer">
-        <table id="inputTable">
-            <thead>
-                <tr>
-                    <th>類別</th>
-                    <th>日期</th>
-                    <th>金額</th>
-                    <th>摘要</th>
-                </tr>
-            </thead>
-            <tbody>
+<div id="top-div">
+    <div class="main-options">
+        <button id="button-func1" onclick="changeToFunc(1)">進貨紀錄</button>
+        <button id="button-func2" onclick="changeToFunc(2)">銷貨紀錄</button>
+        <button id="button-func3" onclick="changeToFunc(3)">其他費用紀錄</button>
+        <button onclick="">匯入</button>
+        <button onclick="">匯出</button>
+    </div>
+    
 
-            </tbody>
-        </table>
+
+    <div id="div-of-func1">
+        <div class="parent-of-main-info">
+            <div class="main-info">
+                <label for="input1">進貨單號</label>
+                <input type="text" name="input1"></input>
+            </div>
+            <div class="main-info">
+                <label for="input2">進貨日期</label>
+                <input type="text" name="input2"></input>
+            </div>
+            <div class="main-info">
+                <label for="input3">供應商名稱</label>
+                <input type="text" name="input1"></input>
+            </div>
+            <div class="main-info">
+                <label for="input4">付款方式</label>
+                <input type="text" name="input4"></input>
+            </div>
+            <div class="main-info">
+                商品明細表格：
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="input-table" id="inputTable1">
+                <thead>
+                    <tr>
+                        <th>商品名稱</th>
+                        <th>單位</th>
+                        <th>數量</th>
+                        <th>單價</th>
+                        <th>小計</th>
+                        <th>備註</th>
+                        <th style="width: 70px;">刪除此行</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="table-controls">
+            <button onclick="addRow(1)">增加一行</button>
+            <button onclick="addTenRow(1)">增加十行</button>
+            <button onclick="clearAllRow(1)">清除全部</button>
+            <button onclick="submitTable(1)">送出資料</button>
+        </div>
     </div>
-    <div class="controls">
-        <button onclick="addRow()">增加一行</button>
-        <button onclick="addTenRow()">增加十行</button>
-        <button onclick="submitTable()">送出資料</button>
+
+    <div id="div-of-func2">
+        <div class="parent-of-main-info">
+            <div class="main-info">
+                <label for="input1">銷貨單號</label>
+                <input type="text" name="input1"></input>
+            </div>
+            <div class="main-info">
+                <label for="input2">銷貨日期</label>
+                <input type="text" name="input2"></input>
+            </div>
+            <div class="main-info">
+                <label for="input3">客戶名稱</label>
+                <input type="text" name="input1"></input>
+            </div>
+            <div class="main-info">
+                <label for="input4">收款方式</label>
+                <input type="text" name="input4"></input>
+            </div>
+            <div class="main-info">
+                商品明細表格：
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="input-table" id="inputTable2">
+                <thead>
+                    <tr>
+                        <th>商品名稱</th>
+                        <th>單位</th>
+                        <th>數量</th>
+                        <th>單價</th>
+                        <th>小計</th>
+                        <th>備註</th>
+                        <th style="width: 70px;">刪除此行</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="table-controls">
+            <button onclick="addRow(2)">增加一行</button>
+            <button onclick="addTenRow(2)">增加十行</button>
+            <button onclick="clearAllRow(2)">清除全部</button>
+            <button onclick="submitTable(2)">送出資料</button>
+        </div>
     </div>
+
+    <div id="div-of-func3">
+        <div class="parent-of-main-info">
+            <div class="main-info">
+                明細表格：
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="input-table" id="inputTable3">
+                <thead>
+                    <tr>
+                        <th>費用單號</th>
+                        <th>日期</th>
+                        <th>費用類別</th>
+                        <th>金額</th>
+                        <th>備註</th>
+                        <th style="width: 70px;">刪除此行</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="table-controls">
+            <button onclick="addRow(3)">增加一行</button>
+            <button onclick="addTenRow(3)">增加十行</button>
+            <button onclick="clearAllRow(3)">清除全部</button>
+            <button onclick="submitTable(3)">送出資料</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
