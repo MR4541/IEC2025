@@ -17,9 +17,10 @@
     <main class="page-content">
       <div class="dashboard">
         <div class="chart-division">
-          <div class="chart-division">
+          <div class="chart-division" style="flex-direction: column;">
             <div class="chart">
-              <table class="income-table">
+              <h1 class="chart-head">損益表</h1>
+              <table class="chart-body income-table">
                 <thead>
                   <tr>
                     <th>項目</th>
@@ -30,12 +31,14 @@
                 <tbody id="income-table-tbody"></tbody>
               </table>
             </div>
-          </div>
-          <div class="chart-division" style="flex-direction: column;">
             <div class="chart">
+              <h1 class="chart-head">每月營收</h1>
               <canvas id="revenue-chart"></canvas>
             </div>
+          </div>
+          <div class="chart-division">
             <div class="chart">
+              <h1 class="chart-head">營收來源品項佔比</h1>
               <canvas id="sales-chart"></canvas>
             </div>
           </div>
