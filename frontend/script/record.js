@@ -66,13 +66,20 @@ function addTenRow(funcIndex=1){
 
 function deleteRow(button){
     const delRow = button.closest("tr"); //find the closest element have "tr"
+    const table = button.closest("table");
     delRow.remove();
+    updateTotal(table);
 }
 
 function clearAllRow(funcIndex=1){
     const tbody = document.querySelector(`#inputTable${funcIndex} tbody`);
     tbody.innerHTML = "";
     addTenRow(funcIndex);
+
+    const mainInputs = document.querySelectorAll(`#div-of-func${funcIndex} .main-info input`);
+    mainInputs.forEach((input)=>{
+        input.value = "";
+    });
 }
 
 function updateSubtotal(inputElement) {
@@ -126,6 +133,11 @@ function submitTable(funcIndex=1){
     const tbody = document.querySelector(`#inputTable${funcIndex} tbody`);
     tbody.innerHTML = "";
     addTenRow(funcIndex);
+
+    const mainInputs = document.querySelectorAll(`#div-of-func${funcIndex} .main-info input`);
+    mainInputs.forEach((input)=>{
+        input.value = "";
+    });
 }
 
 function changeToFunc(funcIndex=1){
