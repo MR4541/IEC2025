@@ -2,8 +2,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #eee;
-  color: #555;
 }
 
 .page-content {

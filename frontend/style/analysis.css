@@ -1,0 +1,29 @@
+#chat-history {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 60vh;
+  margin-top: 5vh;
+  padding: 5vh 5vw;
+  overflow-y: scroll;
+}
+
+.bubble {
+  width: fit-content;
+  padding: 1vw;
+  border-radius: .5em;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.user-bubble {
+  margin-left: auto;
+  margin-bottom: 1vh;
+}
+
+#prompt {
+  position: fixed;
+  bottom: 5vh;
+  left: 5vw;
+  right: 5vw;
+}
+
