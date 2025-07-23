@@ -1,6 +1,6 @@
 #chat-history {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   height: 60vh;
   margin-top: 5vh;
   padding: 5vh 5vw;

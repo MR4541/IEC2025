@@ -42,7 +42,7 @@ let messages = [
 async function printResponse() {
   const bubble = document.createElement('div');
   bubble.className = 'bubble assistant-bubble';
-  chatHistory.appendChild(bubble);
+  chatHistory.insertBefore(bubble, chatHistory.firstChild);
   const res = await fetch("http://localhost:18753/v1/chat/completions", {
     method: "POST",
     headers: {'Content-Type': 'application/json'},
@@ -82,7 +82,7 @@ async function promptKeyDown(input) {
   if (event.key != 'Enter') return;
   const bubble = document.createElement('div');
   bubble.className = 'bubble user-bubble';
-  chatHistory.appendChild(bubble)
+  chatHistory.insertBefore(bubble, chatHistory.firstChild);
   bubble.innerHTML = input.value;
   messages.push({
     "role": "user",
