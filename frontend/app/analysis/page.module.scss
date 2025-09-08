@@ -1,0 +1,35 @@
+.pageContent {
+  margin: 2em 4em;
+}
+
+.chat {
+  padding: 1em;
+  height: 70vh;
+  overflow-y: scroll;
+}
+
+.chatBubble {
+  width: fit-content;
+  margin-bottom: 1em;
+  padding: 1em;
+  border-radius: .5em;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.prompt {
+  font-size: 16px;
+  padding: 1em;
+  border: none;
+  border-radius: 3em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  bottom: 5em;
+  left: 5em;
+  right: 5em;
+}
+
+.prompt:focus {
+  outline: none;
+}
+

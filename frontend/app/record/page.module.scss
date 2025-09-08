@@ -1,0 +1,64 @@
+.pageContent {
+  margin: 2em auto;
+  width: 1024px;
+}
+
+.recordTab {
+  flex: 1;
+  font-size: 24px;
+  margin: 0 1em;
+  padding: .5em;
+}
+
+.csvButtons {
+  display: flex;
+
+  > * {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 1em;
+    padding: 1em;
+    border: none;
+    border-radius: 3em;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+}
+
+.itemTable {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2em;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border-radius: 1em;
+
+  > table {
+    padding: 0 1em;
+    table-layout: fixed;
+
+    > thead th {
+      padding: 1em;
+    }
+
+    input {
+      border-width: 1px;
+      border-radius: 2em;
+      padding: 1em;
+    }
+  }
+
+  > button {
+    all: unset;
+    font-size: 36px;
+    text-align: center;
+    padding: .2em;
+    border-radius: 0 0 .5em .5em;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+}
+
