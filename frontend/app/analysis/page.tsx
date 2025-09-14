@@ -10,16 +10,8 @@ interface LLMMessage {
   content: string;
 }
 
-const incomes: IncomeStatement = {
-  revenue: 750000,
-  cost: 350000,
-  expense: 270000,
-  otherIncome: 10000,
-  tax: 50000,
-};
-
 async function getResponse(chatContext: Context<LLMMessage[]>) {
-  const res = await fetch('http://localhost:18753/v1/chat/completions', {
+  const res = await fetch(`http://${process.env.NEXT_PUBLIC_LLM_HOST}/v1/chat/completions`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
@@ -111,6 +103,14 @@ function LLMInstructions(instructions: string[]): LLMMessage[] {
 }
 
 export default function Analysis() {
+  const incomes: IncomeStatement = {
+    revenue: 750000,
+    cost: 350000,
+    expense: 270000,
+    otherIncome: 10000,
+    tax: 50000,
+  };
+
   const [ messages, setMessages ] = useState(LLMInstructions([
     '你是一家中小企業的財務顧問',
     '這家企業的財報如下，單位為新台幣：',

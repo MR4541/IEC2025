@@ -17,6 +17,7 @@ function NavBar() {
     <nav className='NavBar'>
       <Link href='/'>首頁</Link>
       <Link href='/record'>財務紀錄</Link>
+      <Link href='/stock'>存貨量統計</Link>
       <Link href='/analysis'>AI 財務分析</Link>
     </nav>
   );

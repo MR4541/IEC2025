@@ -1,8 +1,9 @@
 'use client'
 
 import { IncomeStatement } from '@/lib/types';
-import { BarChart, PieChart, XAxis, YAxis, Tooltip, Legend, Bar, ResponsiveContainer, Pie, Cell } from 'recharts';
+import * as rc from 'recharts';
 import styles from './page.module.scss';
+import { useEffect, useState } from 'react';
 
 function IncomeTableRow({ name, value, revenue }: { name: string, value: number, revenue: number }) {
   return (
@@ -57,13 +58,19 @@ function ChartDiv({ direction, children }: { direction: 'row' | 'column', childr
 }
 
 export default function Home() {
-  const incomes: IncomeStatement = {
-    revenue: 750000,
-    cost: 350000,
-    expense: 270000,
-    otherIncome: 10000,
-    tax: 50000,
-  }
+  const [incomes, setIncomes] = useState<IncomeStatement>({
+    revenue: 0,
+    cost: 0,
+    expense: 0,
+    otherIncome: 0,
+    tax: 0,
+  });
+
+  useEffect(() => {
+    fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}/finance`)
+      .then((res) => res.json())
+      .then((data) => setIncomes(data));
+  }, [])
 
   const revenues = [
     { month: '1 月', value: 14 }, { month: '2 月', value: 22 }, { month: '3 月', value: 25 },
@@ -88,27 +95,27 @@ export default function Home() {
             <IncomeTable incomes={incomes} />
           </Chart>
           <Chart title='每月營收'>
-            <ResponsiveContainer height={360}>
-              <BarChart data={revenues}>
-                <XAxis dataKey='month' />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey='value' name='營收（新台幣萬元）' fill='#069' />
-              </BarChart>
-            </ResponsiveContainer>
+            <rc.ResponsiveContainer height={300}>
+              <rc.BarChart data={revenues}>
+                <rc.XAxis dataKey='month' />
+                <rc.YAxis />
+                <rc.Tooltip />
+                <rc.Legend />
+                <rc.Bar dataKey='value' name='營收（新台幣萬元）' fill='#069' />
+              </rc.BarChart>
+            </rc.ResponsiveContainer>
           </Chart>
         </ChartDiv>
         <Chart title='營收來源品項佔比'>
-          <ResponsiveContainer height={640}>
-            <PieChart>
-              <Tooltip />
-              <Legend />
-              <Pie data={sales} dataKey='value' nameKey='item'>
-                {sales.map((_, i) => <Cell key={i} fill={pieColors[i]} />)}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+          <rc.ResponsiveContainer height='90%'>
+            <rc.PieChart>
+              <rc.Tooltip />
+              <rc.Legend />
+              <rc.Pie data={sales} dataKey='value' nameKey='item'>
+                {sales.map((_, i) => <rc.Cell key={i} fill={pieColors[i]} />)}
+              </rc.Pie>
+            </rc.PieChart>
+          </rc.ResponsiveContainer>
         </Chart>
       </ChartDiv>
     </main>
