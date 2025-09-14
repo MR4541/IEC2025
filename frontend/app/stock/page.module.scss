@@ -1,19 +1,12 @@
 .pageContent {
-  margin: 5em;
+  margin: 2em 5em;
 }
 
-.chart {
-  flex: 1;
-  margin: 1vw;
-  padding: 1vw;
+.warning {
+  margin-bottom: 2em;
+  padding: 1em;
   border-radius: .5em;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-
-  > h1 {
-    margin-bottom: 1em;
-    font-size: 16px;
-    text-align: center;
-  }
+  color: #900;
+  background-color: #f99;
 }
 

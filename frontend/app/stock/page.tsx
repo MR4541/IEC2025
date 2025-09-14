@@ -4,6 +4,21 @@ import styles from './page.module.scss';
 import { useEffect, useState } from 'react';
 import * as rc from 'recharts';
 
+function Shortage() {
+  const [shortages, setShortages] = useState<string[]>();
+  useEffect(() => {
+    const checkShortage = () => fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}/shortage`)
+      .then((res) => res.json())
+      .then((data) => setShortages(data));
+    const interval = setInterval(checkShortage, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  if (!shortages?.length) return null;
+  return (
+    <p className={styles.warning}>{shortages.join('、')}不足，請儘快補貨。</p>
+  );
+}
+
 function StockLine({ dataKey, color }: { dataKey: string, color: string }) {
   return (
     <rc.Line
@@ -29,12 +44,14 @@ export default function Stock() {
 
   return (
     <main className={styles.pageContent}>
+      <Shortage />
       <rc.ResponsiveContainer height={600}>
         <rc.LineChart data={stockHistory}>
           <rc.XAxis
             type='number'
             dataKey='time'
             domain={['dataMin', 'dataMax']}
+            tickCount={10}
             tickFormatter={(value) => {
               const date = new Date(value * 1000);
               const zeroPad = (n: number) => n.toString().padStart(2, '0');

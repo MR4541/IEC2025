@@ -37,6 +37,8 @@ stock_history = [{
     ingredients[3]: 1000,
 }]
 
+ingredient_usages = [(x, 0) for x in ingredients]
+
 @app.route('/')
 def hello():
     return '<p>Hello, world!</p>'
@@ -60,6 +62,13 @@ def get_stock():
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 
+@app.route('/shortage')
+def get_warning():
+    shortages = [k for (k, v) in ingredient_usages if stock_history[-1][k] / (v + 0.1) < 1000]
+    res = jsonify(shortages)
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
+
 @app.route('/order', methods=['POST'])
 def process_order():
     order = request.json
@@ -71,5 +80,11 @@ def process_order():
         food = foods[item['item_id']]
         for ingr in food['ingredients']:
             entry[ingredients[ingr]] -= item['quantity']
+            entry[ingredients[ingr]] = max(0, entry[ingredients[ingr]])
+    if len(stock_history) >= 5:
+        start = stock_history[-5]
+        end = stock_history[-1]
+        duration = end['time'] - start['time']
+        ingredient_usages = [(k, (v - end[k]) / duration) for k, v in start.items() if k != 'time']
     return 'ok'
 
