@@ -14,7 +14,7 @@ async function getResponse(chatContext: Context<LLMMessage[]>) {
   const res = await fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}/analysis`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(chatContext.value),
+    body: JSON.stringify({messages: chatContext.value, stream: true}),
   });
   console.log(res);
   const reader = res.body?.getReader();

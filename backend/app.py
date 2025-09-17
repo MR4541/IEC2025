@@ -92,6 +92,7 @@ def process_order():
 
 @app.route('/analysis', methods=['POST'])
 def analyze():
+    llm_url = 'http://localhost:18753/v1/chat/completions'
     instructions = [
         '你是一家中小企業的財務顧問',
         '這家企業的財報如下，單位為新台幣：',
@@ -102,14 +103,18 @@ def analyze():
         '所得稅：' + str(incomes['tax']),
     ]
     messages = [{'role': 'developer', 'content': x} for x in instructions]
-    assert type(request.json) == list
-    messages += request.json
+    req = request.json
+    assert type(req) == dict
+    messages += req['messages']
+
     payload = {
         'messages': messages,
-        'stream': True,
+        'stream': req['stream'],
     }
-    llm_url = 'http://localhost:18753/v1/chat/completions'
-    res = requests.post(llm_url, json=payload, stream=True)
+    res = requests.post(llm_url, json=payload, stream=req['stream'])
+    if not req['stream']:
+        return res.json()['choices'][0]['message']['content']
+
     def completion():
         for line in res.iter_lines():
             if not line: continue

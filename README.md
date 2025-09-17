@@ -36,9 +36,10 @@
     *   `item_id`: the ID of the menu item being ordered.
     *   `quantity`: the requested amount of the item being ordered.
 
-*   `/analyze`: send a `POST` request with an entire chat history to get the streamed response token by token.
-    The chat history is a list of objects in JSON,
-    each with two attributes:
-    *   `role`: either `user` or `assistant`, which are consistent with the OpenAI API.
-    *   `content`: the content of the chat message.
+*   `/analyze`: send a `POST` request with an entire chat history to get the LLM response.
+    The request JSON's format is as follows:
+    *   `stream`: a boolean which tells the server if you want streamed response or not.
+    *   `messages`: a list of objects with the follwing attributes:
+        *   `role`: either `user` or `assistant`, which are consistent with the OpenAI API.
+        *   `content`: the content of the chat message.
 
