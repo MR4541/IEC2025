@@ -12,7 +12,7 @@
 
 2.  Then, go to the `frontend/` diectory and run
     ```
-    echo 'NEXT_PUBLIC_SERVER_HOST' > .env
+    echo 'NEXT_PUBLIC_SERVER_HOST=localhost:5000' > .env
     npm run dev # or `pnpm dev`
     ```
     to serve the Next.js website at `localhost:3000`
