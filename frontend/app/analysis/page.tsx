@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { Context, IncomeStatement } from '@/lib/types'
+import { useState, useEffect, useRef } from 'react';
+import { Context } from '@/lib/types'
 import Markdown from 'react-markdown';
 import styles from './page.module.scss';
 
@@ -11,38 +11,23 @@ interface LLMMessage {
 }
 
 async function getResponse(chatContext: Context<LLMMessage[]>) {
-  const res = await fetch(`http://${process.env.NEXT_PUBLIC_LLM_HOST}/v1/chat/completions`, {
+  const res = await fetch(`http://${process.env.NEXT_PUBLIC_SERVER_HOST}/analysis`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      messages: chatContext.value,
-      stream: true
-    })
+    body: JSON.stringify(chatContext.value),
   });
+  console.log(res);
   const reader = res.body?.getReader();
   let content = '';
   while (true) {
     const result = await reader?.read();
     if (result?.done) break;
     const text = new TextDecoder().decode(result?.value);
-    const lines = text.split('\n');
-    for (let i=0; i < lines.length-1; i++) {
-      if (lines[i]) {
-        try {
-          const data = JSON.parse(lines[i].slice(6));
-          const word = data.choices[0].delta.content;
-          if (word) {
-            content += word;
-            chatContext.setValue([...chatContext.value, {
-              role: 'assistant',
-              content: content,
-            }]);
-          }
-        } catch (e) {
-          console.log(e)
-        }
-      }
-    }
+    content += text;
+    chatContext.setValue([...chatContext.value, {
+      role: 'assistant',
+      content: content,
+    }]);
   }
 }
 
@@ -67,15 +52,15 @@ function ChatBubble({ message }: { message: LLMMessage }) {
 }
 
 function Chat({ chatContext }: { chatContext: Context<LLMMessage[]> }) {
+  const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (chatContext.value.at(-1)?.role === 'user') {
-      getResponse(chatContext);
-    }
-  })
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatContext])
 
   return (
     <div className={styles.chat}>
       {chatContext.value.map((msg, i) => <ChatBubble key={i} message={msg}/>)}
+      <div ref={bottomRef} />
     </div>
   );
 }
@@ -85,10 +70,11 @@ function Prompt({ chatContext }: { chatContext: Context<LLMMessage[]> }) {
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
-      chatContext.setValue([...chatContext.value, {
+      chatContext.value.push({
         role: 'user',
         content: promptText,
-      }]);
+      });
+      getResponse(chatContext);
       setPromptText('');
     }}>
       <input className={styles.prompt} type='text' value={promptText} onChange={(e) => setPromptText(e.target.value)} />
@@ -96,30 +82,8 @@ function Prompt({ chatContext }: { chatContext: Context<LLMMessage[]> }) {
   );
 }
 
-function LLMInstructions(instructions: string[]): LLMMessage[] {
-  return instructions.map((value) => {
-    return { role: 'developer', content: value };
-  });
-}
-
 export default function Analysis() {
-  const incomes: IncomeStatement = {
-    revenue: 750000,
-    cost: 350000,
-    expense: 270000,
-    otherIncome: 10000,
-    tax: 50000,
-  };
-
-  const [ messages, setMessages ] = useState(LLMInstructions([
-    '你是一家中小企業的財務顧問',
-    '這家企業的財報如下，單位為新台幣：',
-    '營收：' + incomes.revenue,
-    '營業成本：' + incomes.cost,
-    '營業費用：' + incomes.expense,
-    '業外收入：' + incomes.otherIncome,
-    '所得稅：' + incomes.tax,
-  ]));
+  const [ messages, setMessages ] = useState<LLMMessage[]>([]);
 
   const chatContext: Context<LLMMessage[]> = {
     value: messages,
