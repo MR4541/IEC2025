@@ -2,7 +2,9 @@
 
 ## How to run
 
-1.  First, go to the `backend/` directory and run
+1.  Make sure to have `flask` and `flask-cors` installed
+    on your system or your virtual environment,
+    and then go to the `backend/` directory and run
     ```
     flask run
     ```
@@ -29,13 +31,14 @@
 *   `/shortage`: get a list of ingredients that are currently having a shortage.
 
 *   `/order`: send `POST` requests to this endpoint to make orders.
+    The payload of an order is a list of objects in JSON,
+    each with two attributes:
+    *   `item_id`: the ID of the menu item being ordered.
+    *   `quantity`: the requested amount of the item being ordered.
 
-## Order payload format
-
-The payload of an order is a list of objects in JSON,
-each with two attributes:
-
-*   `item_id`: the ID of the menu item being ordered.
-
-*   `quantity`: the requested amount of the item being ordered.
+*   `/analyze`: send a `POST` request with an entire chat history to get the streamed response token by token.
+    The chat history is a list of objects in JSON,
+    each with two attributes:
+    *   `role`: either `user` or `assistant`, which are consistent with the OpenAI API.
+    *   `content`: the content of the chat message.
 
