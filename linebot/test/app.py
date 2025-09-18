@@ -12,6 +12,8 @@ from linebot.models import (
     ImageSendMessage)
 from linebot.exceptions import InvalidSignatureError
 import logging
+import requests # HTTP POST
+import markdown_text_clean
 
 # 加載 .env 文件中的變數
 load_dotenv(".env")
@@ -20,6 +22,9 @@ load_dotenv(".env")
 line_token = os.getenv('LINE_TOKEN')
 line_secret = os.getenv('LINE_SECRET')
 next_public_server_host = os.getenv('NEXT_PUBLIC_SERVER_HOST')
+
+# volatile 儲存用戶 ID 和對話紀錄
+KNOWN_USERS = {}
 
 # 檢查是否設置了環境變數
 if not line_token or not line_secret:
@@ -61,23 +66,50 @@ def handle_message(event: Event):
         user_message = str(event.message.text)  # 使用者的訊息
         app.logger.info(f"收到的訊息: {user_message}")
         if user_message == "$ man IEC2025_bot":
-            reply_text = """
-您好，這裡是慧流小舖的 LINE Bot，使用方式如下：
+            reply_text = """您好，這裡是慧流小舖的 LINE Bot，使用方式如下：
 1. 透過下方的圖文選單前往本服務的介紹與使用說明
 2. 使用 AI 財務分析功能，請發送以 \"[AI] \" 開頭的訊息
 3. 本服務會紀錄開機後對話的人員，若伺服器有通知或警示會在此發送訊息
-4. 如要測試警示功能是否有作用，請使用 \"$ test\"
-            """
+4. 如要測試警示功能是否有作用，請使用 \"$ test\""""
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text=reply_text)
             )
         elif user_message.startswith("[AI] "):
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="[AI] 功能建置中...")
-            )
-            pass
+            user_input = user_message[5:]
+            try:
+                user_id = str(event.source.user_id)
+            except:
+                user_id = None
+            print(f"user: {user_id}")
+            # use push_message because LINE Bot can't reply_message() twice :(
+            line_bot_api.push_message(user_id, TextSendMessage("生成 AI 分析可能需要十幾秒的時間，請稍後..."))
+            
+            # add this msg to history
+            if user_id not in KNOWN_USERS:
+                KNOWN_USERS[user_id] = []
+            KNOWN_USERS[user_id].append({'role':'user', 'content':user_input})
+            print(KNOWN_USERS[user_id])
+            # send POST to backend AI
+            payload = {
+                'stream': False,
+                'messages': [{'role':'user','content':user_input}]
+            }
+            try:
+                res = requests.post(f"http://{next_public_server_host}/analysis", json=payload)
+                reply_text = markdown_text_clean.clean_text(res.text)
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text=reply_text)
+                )
+                KNOWN_USERS[user_id].append({'role':'assistant', 'content':reply_text})
+            except:
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text="[AI] 連接或生成分析失敗！")
+                )
+                # remove user input
+                KNOWN_USERS[user_id].pop()
         elif user_message == "$ test":
             line_bot_api.reply_message(
                 event.reply_token,
@@ -92,6 +124,8 @@ def handle_message(event: Event):
                 event.reply_token,
                 TextSendMessage(text=reply_text)
             )
+    # debug
+    print("===============",KNOWN_USERS,"================",sep="\n\n")
 
 # 應用程序入口點
 if __name__ == "__main__":

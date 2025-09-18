@@ -45,3 +45,4 @@
 
 ## LINE Bot usage
 *   Use "$ man IEC2025_bot" to get help.
+*   To get AI analysis, send messages that start with "[AI] ". The rest of the message will be used as prompt.
