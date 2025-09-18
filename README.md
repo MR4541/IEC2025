@@ -22,6 +22,10 @@
 4.  If you want to geenrate simulated order requests,
     run `python3 orderator/order.py`.
 
+5.  To run `LINE Bot`, first `cd` to `linebot/test/`:
+    1.  Locally: use `ngrok http 6000` and then `python3 app.py`, and copy the webhook link to LINE Developers.
+    2.  Render: deploy it ([How](https://hackmd.io/@k0217/rJKNMyhDkx)) and copy the webhook link to LINE Developers.
+    
 ## Backend endpoints
 
 *   `/notify`: for test purpose only, send a `POST` request to this endpoint
@@ -49,3 +53,4 @@
 ## LINE Bot usage
 *   Use "$ man IEC2025_bot" to get help.
 *   To get AI analysis, send messages that start with "[AI] ". The rest of the message will be used as prompt.
+*   Use "$ test" to make the backend send a test notification.
