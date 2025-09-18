@@ -24,6 +24,9 @@
 
 ## Backend endpoints
 
+*   `/notify`: for test purpose only, send a `POST` request to this endpoint
+    to trigger the server to send the received data to the LINE bot.
+
 *   `/finance`: get the income statement.
 
 *   `/stock`: get the history of all ingredients' stock changes.

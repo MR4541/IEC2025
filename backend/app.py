@@ -55,6 +55,11 @@ incomes = {
 def hello():
     return '<p>Hello, world!</p>'
 
+@app.route('/notify', methods=['POST'])
+def notify_linebot():
+    requests.post('localhost:6000', data=request.data)
+    return 'ok'
+
 @app.route('/finance')
 def get_finance():
     res = jsonify(incomes)

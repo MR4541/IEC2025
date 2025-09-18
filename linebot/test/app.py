@@ -6,8 +6,8 @@ from linebot.v3.exceptions import InvalidSignatureError
 from linebot.v3.messaging.models import TextMessage
 from linebot import LineBotApi, WebhookHandler
 from linebot.models import (
-    MessageEvent, 
-    TextMessage, 
+    MessageEvent,
+    TextMessage,
     TextSendMessage,
     ImageSendMessage)
 from linebot.exceptions import InvalidSignatureError
@@ -84,7 +84,7 @@ def handle_message(event: Event):
             print(f"user: {user_id}")
             # use push_message because LINE Bot can't reply_message() twice :(
             line_bot_api.push_message(user_id, TextSendMessage("生成 AI 分析可能需要十幾秒的時間，請稍後..."))
-            
+
             # add this msg to history
             if user_id not in KNOWN_USERS:
                 KNOWN_USERS[user_id] = []
@@ -130,3 +130,4 @@ def handle_message(event: Event):
 # 應用程序入口點
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=6000)
+
