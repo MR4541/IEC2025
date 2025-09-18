@@ -57,7 +57,7 @@ def hello():
 
 @app.route('/notify', methods=['POST'])
 def notify_linebot():
-    requests.post('localhost:6000', data=request.data)
+    requests.post('http://localhost:6000', data=request.data)
     return 'ok'
 
 @app.route('/finance')
