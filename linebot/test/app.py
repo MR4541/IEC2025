@@ -103,6 +103,8 @@ def handle_message(event: Event):
             }
             try:
                 res = requests.post(f"http://{next_public_server_host}/analysis", json=payload)
+                if res.status_code != 200: #jump to except
+                    raise Exception("")
                 reply_text = markdown_text_clean.clean_text(res.text)
                 line_bot_api.reply_message(
                     event.reply_token,
