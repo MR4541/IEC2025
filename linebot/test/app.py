@@ -14,6 +14,10 @@ from linebot.exceptions import InvalidSignatureError
 import logging
 import requests # HTTP POST
 import markdown_text_clean
+from flask_cors import CORS
+
+import notify_test # custom package
+
 
 # 加載 .env 文件中的變數
 load_dotenv(".env")
@@ -38,6 +42,7 @@ handler = WebhookHandler(line_secret)
 
 # 創建 Flask 應用
 app = Flask(__name__)
+CORS(app)
 
 app.logger.setLevel(logging.DEBUG)
 
@@ -62,6 +67,14 @@ def callback():
 # 設置一個事件處理器來處理 TextMessage 事件
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event: Event):
+    try:
+        user_id = str(event.source.user_id)
+    except:
+        user_id = None
+    # add this user to table
+    if user_id not in KNOWN_USERS:
+        KNOWN_USERS[user_id] = []
+
     if event.message.type == "text":
         user_message = str(event.message.text)  # 使用者的訊息
         app.logger.info(f"收到的訊息: {user_message}")
@@ -77,17 +90,10 @@ def handle_message(event: Event):
             )
         elif user_message.startswith("[AI] "):
             user_input = user_message[5:]
-            try:
-                user_id = str(event.source.user_id)
-            except:
-                user_id = None
             print(f"user: {user_id}")
             # use push_message because LINE Bot can't reply_message() twice :(
             line_bot_api.push_message(user_id, TextSendMessage("生成 AI 分析可能需要十幾秒的時間，請稍後..."))
-
             # add this msg to history
-            if user_id not in KNOWN_USERS:
-                KNOWN_USERS[user_id] = []
             KNOWN_USERS[user_id].append({'role':'user', 'content':user_input})
             print(KNOWN_USERS[user_id])
             # send POST to backend AI
@@ -111,11 +117,13 @@ def handle_message(event: Event):
                 # remove user input
                 KNOWN_USERS[user_id].pop()
         elif user_message == "$ test":
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="警示系統建置中...")
-            )
-            pass
+            try:
+                notify_test.send_notify()
+            except:
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text="通知測試失敗！")
+                )
         else:
             # 使用 GPT 生成回應
             reply_text = ("你說了：" + user_message)
@@ -126,6 +134,16 @@ def handle_message(event: Event):
             )
     # debug
     print("===============",KNOWN_USERS,"================",sep="\n\n")
+
+# send notification to all recorded users
+@app.route('/notify', methods=['POST'])
+def bot_sent_notify():
+    notify_text = request.data.decode()
+    print("receive a notification:", notify_text, sep="\n")
+    for user_id in KNOWN_USERS.keys():
+        line_bot_api.push_message(user_id, TextSendMessage(notify_text))
+    return 'ok'
+
 
 # 應用程序入口點
 if __name__ == "__main__":
