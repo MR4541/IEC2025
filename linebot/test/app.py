@@ -19,6 +19,7 @@ load_dotenv(".env")
 # 從環境變數中讀取 LINE 的 Channel Access Token 和 Channel Secret
 line_token = os.getenv('LINE_TOKEN')
 line_secret = os.getenv('LINE_SECRET')
+next_public_server_host = os.getenv('NEXT_PUBLIC_SERVER_HOST')
 
 # 檢查是否設置了環境變數
 if not line_token or not line_secret:
@@ -57,16 +58,41 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event: Event):
     if event.message.type == "text":
-        user_message = event.message.text  # 使用者的訊息
+        user_message = str(event.message.text)  # 使用者的訊息
         app.logger.info(f"收到的訊息: {user_message}")
+        if user_message == "$ man IEC2025_bot":
+            reply_text = """
+您好，這裡是慧流小舖的 LINE Bot，使用方式如下：
+1. 透過下方的圖文選單前往本服務的介紹與使用說明
+2. 使用 AI 財務分析功能，請發送以 \"[AI] \" 開頭的訊息
+3. 本服務會紀錄開機後對話的人員，若伺服器有通知或警示會在此發送訊息
+4. 如要測試警示功能是否有作用，請使用 \"$ test\"
+            """
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=reply_text)
+            )
+        elif user_message.startswith("[AI] "):
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="[AI] 功能建置中...")
+            )
+            pass
+        elif user_message == "$ test":
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="警示系統建置中...")
+            )
+            pass
+        else:
+            # 使用 GPT 生成回應
+            reply_text = ("你說了：" + user_message)
 
-        # 使用 GPT 生成回應
-        reply_text = ("你說了：" + user_message)
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=reply_text)
+            )
 
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=reply_text)
-        )
 # 應用程序入口點
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=6000)

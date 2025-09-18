@@ -43,3 +43,5 @@
         *   `role`: either `user` or `assistant`, which are consistent with the OpenAI API.
         *   `content`: the content of the chat message.
 
+## LINE Bot usage
+*   Use "$ man IEC2025_bot" to get help.
