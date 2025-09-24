@@ -19,6 +19,7 @@ function NavBar() {
       <Link href='/record'>財務紀錄</Link>
       <Link href='/stock'>存貨量統計</Link>
       <Link href='/analysis'>AI 財務分析</Link>
+      <Link href='/print-report'>匯出財務報告</Link>
     </nav>
   );
 }
