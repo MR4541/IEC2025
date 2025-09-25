@@ -17,25 +17,3 @@
   }
 }
 
-.incomeTable {
-  width: 100%;
-  border-top: solid #555 2px;
-  border-bottom: solid #555 2px;
-
-  th {
-    text-align: left;
-  }
-
-  thead th {
-    border-bottom: solid #555 1px;
-  }
-
-  tbody td {
-    text-align: right;
-  }
-
-  th, td {
-    padding: 0 1em;
-  }
-}
-

@@ -1,5 +1,5 @@
 .slidePage {
-  height: 70.8vw;
+  height: 70.78vw;
   width: 100vw;
   color: #443658;
   background-color: #fff4f1;
@@ -28,7 +28,7 @@
     .slideBody {
       flex: 5;
       font-size: 2vw;
-      padding: 0 5vw;
+      padding: 2vw 5vw;
     }
   }
 
@@ -38,7 +38,26 @@
 
     .slideContent {
       border-color: #195c71;
+
+      .slideHeading {
+        flex: 0;
+      }
+
+      .slideBody {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
+}
+
+.slideTitle {
+  font-size: 4em;
+}
+
+.slideSubTitle {
+  color: #e4e941;
 }
 
