@@ -20,6 +20,7 @@ function NavBar() {
       <Link href='/stock'>存貨量統計</Link>
       <Link href='/analysis'>AI 財務分析</Link>
       <Link href='/print-report'>匯出財務報告</Link>
+      <Link href='https://crm.vitalyun.com/f53310b205f6adb7148bdd7233f920b1/Customer.mvc/Index'>CRM</Link>
     </nav>
   );
 }
